@@ -14,8 +14,8 @@ class BuoyProcessor {
   private val mongoPort: String = sys.env.getOrElse("MONGO_PORT", throw new IllegalStateException("The environment variable MONGO_PORT is not set."))
   private val mongoUser: String = sys.env.getOrElse("MONGO_USER", throw new IllegalStateException("The environment variable MONGO_USER is not set."))
   private val mongoPassword: String = sys.env.getOrElse("MONGO_PASSWORD", throw new IllegalStateException("The environment variable MONGO_PASSWORD is not set."))
-  private val mongoDBName: String = sys.env.getOrElse("MONGO_DB_NAME", throw new IllegalStateException("The environment variable MONGO_DB_NAME is not set."))
-  private val dateURI = s"mongodb://$mongoUser:$mongoPassword@$mongoHost:$mongoPort/$mongoDBName"
+  private val mongoDB: String = sys.env.getOrElse("MONGO_DB", throw new IllegalStateException("The environment variable MONGO_DB is not set."))
+  private val dateURI = s"mongodb://$mongoUser:$mongoPassword@$mongoHost:$mongoPort/$mongoDB"
 
   /**
     * This object connects to the database and initializes itself with the configurations specified
