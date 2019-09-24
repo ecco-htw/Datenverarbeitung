@@ -5,6 +5,10 @@
 *.swp
 *.out
 
+## project credentials
+src/main/resources/sh/local_environment.sh
+src/main/resources/sh/server_environment.sh
+
 # rails specific
 *.sqlite3
 config/database.yml

@@ -1,7 +1,7 @@
 package com.example.app.model.frontend_endpoints
 
 /**
-  * Maps this: ITS ONLY FOR ONE FLOAT ! The float gets identified by the id that the frontend already received in endpoint1
+  * Maps this: ITS ONLY FOR ONE BUOY ! The buoy gets identified by the id that the frontend already received in endpoint1
   * {
   *   "saltinessValues": [...],
   *   "pressureValues": [...],

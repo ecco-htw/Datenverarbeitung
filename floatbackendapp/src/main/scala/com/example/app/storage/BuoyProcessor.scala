@@ -1,42 +1,39 @@
 package com.example.app.storage
 
+import com.example.app.model.Buoy
 import com.example.app.model.frontend_endpoints._
-import com.example.app.model.{Buoy, frontend_endpoints}
 import com.example.app.storage.MongoPipeline._
 import com.mongodb.spark.MongoSpark
 import com.mongodb.spark.rdd.MongoRDD
-import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.{DataFrame, _}
+import org.apache.spark.sql._
 import org.bson.Document
-import org.bson.BsonArray
 
 class BuoyProcessor {
 
-  //System.setProperty("hadoop.home.dir", "C:\\\\hadoop")
+  private val mongoHost: String = sys.env.getOrElse("MONGO_HOST", throw new IllegalStateException("The environment variable MONGO_HOST is not set."))
+  private val mongoPort: String = sys.env.getOrElse("MONGO_PORT", throw new IllegalStateException("The environment variable MONGO_PORT is not set."))
+  private val mongoUser: String = sys.env.getOrElse("MONGO_USER", throw new IllegalStateException("The environment variable MONGO_USER is not set."))
+  private val mongoPassword: String = sys.env.getOrElse("MONGO_PASSWORD", throw new IllegalStateException("The environment variable MONGO_PASSWORD is not set."))
+  private val mongoDBName: String = sys.env.getOrElse("MONGO_DB_NAME", throw new IllegalStateException("The environment variable MONGO_DB_NAME is not set."))
+  private val dateURI = s"mongodb://$mongoUser:$mongoPassword@$mongoHost:$mongoPort/$mongoDBName"
 
   /**
     * This object connects to the database and initializes itself with the configurations specified
-    * spark.mongodb.input.uri means that we are can write to the database
+    * spark.mongodb.input.uri means that we can write to the database
     * spark.mongodb.output.uri means that we can read from the database
     */
   val sparkSession: SparkSession = SparkSession.builder().master("local[*]")
     .appName("BuoyREST_Interface")
-    //.config("spark.mongodb.input.uri", "mongodb://ecco:kd23.S.W@hadoop05.f4.htw-berlin.de:27020/ecco.buoy")
-    //.config("spark.mongodb.output.uri", "mongodb://ecco:kd23.S.W@hadoop05.f4.htw-berlin.de:27020/ecco.buoy")
-    .config("spark.mongodb.input.uri", "mongodb://ecco:kd23.S.W@localhost:27020/ecco.buoy")
-    .config("spark.mongodb.output.uri", "mongodb://ecco:kd23.S.W@localhost:27020/ecco.buoy")
-    //.config("spark.mongodb.input.uri", "mongodb://ecco:kd23.S.W@localhost:27017/ecco.buoy")
-    //.config("spark.mongodb.output.uri", "mongodb://ecco:kd23.S.W@localhost:27017/ecco.buoy")
+    .config("spark.mongodb.input.uri", dateURI)
+    .config("spark.mongodb.output.uri", dateURI)
     .config("spark.ui.port", "4444")
     .getOrCreate()
-  // TODO: outsource credentials to environment variables
 
   /**
     * This import statement is needed to convert the data coming from mongodb to our case class, which will ensure a more
     * readable and robust code structure
     */
 
-  import sparkSession.implicits._
   import MongoPipeline.implicits._
 
   /**

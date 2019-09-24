@@ -1,7 +1,6 @@
 package com.example.app
 
 import com.example.app.storage.BuoyProcessor
-import org.apache.commons.lang.exception.ExceptionUtils.getStackTrace
 import scala.io.Source
 import org.scalatra._
 
