@@ -11,8 +11,6 @@ import org.scalatra.json.JacksonJsonSupport
 
 class MyScalatraServlet extends ScalatraServlet with JacksonJsonSupport {
 
-
-  //val processor: FloatProcessor = new FloatProcessor
   val bprocessor: BuoyProcessor = new BuoyProcessor
 
   /**
@@ -36,9 +34,9 @@ class MyScalatraServlet extends ScalatraServlet with JacksonJsonSupport {
     contentType = formats("html")
     response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"))
     val source = Source.fromFile("src/main/resources/html/index.html")
-    val output = source.getLines().mkString;
-    source.close();
-    output;
+    val output = source.getLines().mkString
+    source.close()
+    output
   }
 
   get("/last_coordinates") {

@@ -1,6 +1,5 @@
 package com.example.app.model.frontend_endpoints
 
-// Case class that maps this:
 /**{
   * "id" "blahblah"
   * "coordinates": {

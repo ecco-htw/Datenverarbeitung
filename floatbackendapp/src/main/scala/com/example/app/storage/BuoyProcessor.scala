@@ -37,10 +37,15 @@ class BuoyProcessor {
   import MongoPipeline.implicits._
 
   /**
-    * The dataset containing the buoyserialnumber as a key and all buoys mapped to that key as value
+    * The dataset containing the floatserialnumber as a key and all buoys mapped to that key as value
     */
   val source: MongoRDD[Document] = MongoSpark.load(sparkSession.sparkContext)
 
+  /**
+    * Alternative to MongoPipeline.scala
+    * @param docs Sequence of mongo pipeline stages
+    * @return result of pipeline
+    */
   private def pipeline(docs: Seq[String]): MongoRDD[Document] = {
     source.withPipeline(docs.map(Document.parse))
   }
@@ -76,16 +81,13 @@ class BuoyProcessor {
     * Here we save the coordinates for the specified buoy id AND we store the measurements of the buoy with the specified
     * buoy id, by filtering the buoys in the database and finding the ones that match the given id. Then we take all the
     * measurement arrays mapped to that buoy and we save them together with the coordinates inside the object.
-    * Then we wrap the object inside the Ep2DataJsonWrapper, which is another object, because thats how the frontend
+    * Then we wrap the object inside the Ep2DataJsonWrapper, which is another object, because that's how the frontend
     * wanted to receive the data
     *
     * @param buoyId the buoy id
     * @return all coordinates mapped to the specified buoy id and all the measurements too
     */
   def retrievePathAndLastMeasurements(buoyId: String): Ep2DataJsonWrapper = {
-
-    // with MongoPipeline wrapper
-
     val buoysPipeline = MongoPipeline()
       .Match("floatSerialNo" -> buoyId)
       .Sort("juld" -> -1)
@@ -99,20 +101,6 @@ class BuoyProcessor {
       .Project("longitude" -> 1, "latitude" -> 1, "cycleNumber" -> 1)
       .run(source)
       .toDS[CoordinatesAndCycleNumber].collect()
-
-    /*
-    // without MongoPipeline wrapper
-
-    val measurements = pipeline(Seq(
-      "{$match: { floatSerialNo : '" + buoyId + "' }}",
-      "{$limit: 1}"
-    )).toDS[Buoy].collect()(0)
-
-    val coordinates = pipeline(Seq(
-      "{$match: { floatSerialNo: '" + buoyId + "' }}",
-      "{$project: {'longitude': 1, 'latitude': 1}}"
-    )).toDS[Coordinates].collect()
-     */
 
     val result = PathAndLastMeasurements(measurements.PSAL, measurements.PRES, measurements.TEMP, coordinates)
     Ep2DataJsonWrapper(result)

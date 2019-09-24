@@ -43,21 +43,6 @@ object MongoPipeline {
 
     implicit def arrayMapToMelem(map: Map[String, Seq[MElement]]): MDoc = MDoc(map.mapValues(arrayToMelem).toSeq:_*)
 
-    /*
-    implicit def mapToMelem[T](elems: Seq[(String, T)]): MElement = MDoc(elems: _*)
-
-    def elemident(melement: MElement): MElement = melement
-
-
-    implicit def astrToMelem(value: (String, String)): (String, MElement) = (value._1,  MString(value._2))
-
-    implicit def aintToMelem(value: (String, Int)): (String, MElement) = (value._1,  MInt(value._2))
-
-    implicit def aarrayToMelem(elems: (String, Seq[MElement])): (String, MElement) = (elems._1, MArray(elems._2:_*))
-
-    implicit def amapToMelem(elems: (String, Seq[(String, MElement)])): (String, MElement) = (elems._1,  MDoc(elems._2:_*))
-
-     */
   }
 
   case class Stage(name: String, value: MElement) {
@@ -84,7 +69,7 @@ case class MongoPipeline(stages: Seq[MongoPipeline.Stage] = Seq.empty) {
   /**
     * Add a match stage (for more info see https://docs.mongodb.com/manual/reference/operator/aggregation/match/#pipe._S_match)
     *
-    * @param doc : {$match: doc}
+    * @param elems : {$match: elems}
     */
   def Match(elems: (String, MElement)*): MongoPipeline = addStage(Stage("$match", MDoc(elems:_*)))
 
@@ -98,28 +83,28 @@ case class MongoPipeline(stages: Seq[MongoPipeline.Stage] = Seq.empty) {
   /**
     * Add a group stage (for more info see https://docs.mongodb.com/manual/reference/operator/aggregation/group/#pipe._S_group)
     *
-    * @param doc : {$group: doc}
+    * @param elems : {$group: elems}
     */
   def Group(elems: (String, MElement)*): MongoPipeline = addStage(Stage("$group", MDoc(elems:_*)))
 
   /**
     * Add a replaceRoot stage (for more info see https://docs.mongodb.com/manual/reference/operator/aggregation/match/#pipe._S_replaceRoot)
     *
-    * @param doc : {$replaceRoot: doc}
+    * @param elems : {$replaceRoot: elems}
     */
   def ReplaceRoot(elems: (String, MElement)*): MongoPipeline = addStage(Stage("$replaceRoot", MDoc(elems:_*)))
 
   /**
     * Add a project stage (for more info see https://docs.mongodb.com/manual/reference/operator/aggregation/match/#pipe._S_project)
     *
-    * @param doc : {$project: doc}
+    * @param elems : {$project: elems}
     */
   def Project(elems: (String, MElement)*): MongoPipeline = addStage(Stage("$project", MDoc(elems:_*)))
 
   /**
     * Add a sort stage (for more info see https://docs.mongodb.com/manual/reference/operator/aggregation/match/#pipe._S_sort)
     *
-    * @param doc : {$project: doc}
+    * @param elems : {$project: elems}
     */
   def Sort(elems: (String, MElement)*): MongoPipeline = addStage(Stage("$sort", MDoc(elems:_*)))
 
