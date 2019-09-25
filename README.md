@@ -8,43 +8,39 @@
   - MongoSpark Connector
 
 
-## Deployment
+## Deployment 
+
+### auf dem Server
 ```
 $ git clone https://github.com/htw-wise-2018/Datenverarbeitung.git
 $ cd Datenverarbeitung/floatbackendapp
-$ screen -S ecco_datenverarbeitung
+$ screen -S Backend
 $ sbt clean
 $ sbt package
 $ sbt
 $ jetty:start
 ```
-
 Nach dem Start sollte keine Tastatureingabe erfolgen, sonst schließt sich das Programm.  
 Konsole schließen empfohlen.
+
+### lokal
+```
+$ ssh -L 127.0.0.1:27020:hadoop05.f4.htw-berlin.de:27020 local@ecco.f4.htw-berlin.de
+```
+Lokal Environment-Variablen setzen wie in `/home/local/.profile` auf dem Server, nur mit `MONGO_HOST=localhost`
+
+```
+$ sbt clean
+$ sbt package
+$ sbt
+> jetty:start
+```
 
 ## Neuladen der Anwendung
 ```
 $ sbt
-> ~;jetty:stop;jetty:start
+> jetty:stop;jetty:start
 ```
 
-
-Nach dem Screen Befehl kann die Console geschlossen werden und der Prozess läuft weiter.
-Zum Auflisten der Hintergrundprozesse:
-```
-$ screen -ls
-```
-
-Um wieder zum Prozess zu gelangen:
-```
-screen -r XXXX.ecco_datenverarbeitung
-```
-
-Um alle Screen Prozesse zu schließen:
-```
-$ pkill screen
-```
-
-## Wichtig
-
-Um den Server zu beenden `Strg`+`d` 
+## Endpunkte
+Wenn das Programm läuft, kann über `http://localhost:8080/` eine Übersicht über die Endpunkte abgerufen werden.
