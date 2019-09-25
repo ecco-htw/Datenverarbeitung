@@ -57,7 +57,6 @@ import com.example.app.storage.MongoPipeline._
 
 /**
   * This class represents a mongodb aggregation pipeline consisting of a sequence of stages
-  * )
   *
   * @param stages : A sequence of pipeline stages.
   *               See mongodb documentation for more info (https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline)
